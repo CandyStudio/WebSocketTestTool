@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Candy Studio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="WebScoket测试工具">
+    <meta name="author" content="LeeNan">
+
+    <script src="//cdnjs.bootcss.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="//cdnjs.bootcss.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+    <!-- Le styles -->
+    <link href="//cdnjs.bootcss.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+
+        @media (max-width: 980px) {
+            /* Enable use of floated navbar text */
+            .navbar-text.pull-right {
+                float: none;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+        }
+    </style>
+    <link href="//cdnjs.bootcss.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="//cdnjs.bootcss.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+    <![endif]-->
+
+    <script src="js/lib/socket.io.js"></script>
+    <script src="js/lib/pomeloclient.js"></script>
+    <script src="js/WebSocket.js"></script>
+    <script src='http://zachofalltrades.github.com/jquery.format/jquery.format.js'></script>
+    <link  href='http://zachofalltrades.github.com/jquery.format/demo/jquery-ui.css' rel='stylesheet' type='text/css'/>
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="brand" href="#">Candy Studio</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#home" data-toggle="tab">首页</a></li>
+            <li><a href="#connector" data-toggle="tab">连接服务器</a></li>
+            <li><a href="#testAPI" data-toggle="tab">测试接口</a></li>
+            <li><a href="#history" data-toggle="tab">连接历史</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="home">
+                <div class="hero-unit" id="titleDiv">
+                    <h2>WebSocket Test Tool</h2>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="connector">
+                <div >
+                    <div class="span4">
+                        <div class="control-group" id="connectorHostDiv">
+                            <input class="input-xlarge focused" id="connectorHost" name="connectorHost" type="text" placeholder="host">
+                        </div>
+                        <div class="control-group" id="connectorPortDiv">
+                            <input class="input-mini focused" id="connectorPort" name="connectorPort" type="text" placeholder="port">
+                        </div>
+                        <div class="control-group" id="connectorUserDiv">
+                            <input class="input-mini focused" id="connectorUser" name="connectorPort" type="text" placeholder="userid">
+                        </div>
+                        <div class="control-group" id="connectorButtonDiv">
+                            <button class="btn btn-primary" href="#" id="connectorButton">connect</button>
+                        </div>
+                    </div>
+                    <div class="span5">
+                        <div>
+                            <textarea id='json_text' rows='30' cols="200" placeholder="Result"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="testAPI">
+                <div class="controls">
+                    <input class="span5" type="text" placeholder="接口 : chat.chatHandler.query" id="api">
+                </div>
+                <div id="paramDiv">
+                    <div id="paramDiv1">
+                        <input class="span3" type="text" placeholder="参数名" id="paramName1">
+                        <input class="span3" type="text" placeholder="参数值" id="paramValue1">
+                        <select id="paramType1" class="span1">
+                            <option value="str">字符串</option>
+                            <option value="int">数  字</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <button class="btn btn-primary" href="#" id="testAPIButton">run</button>
+                </div> <br/>
+                <div>
+                    <div>
+                        返回结果JSON: <a href="#" onclick="copyCode()"><i class='icon-file' id="b_clip_button"></i></a> <br/>
+                        <textarea id='json_text2' rows='10' cols="1000" placeholder="Result"></textarea>
+                    </div>
+                    <div id="link">
+                        <a href="http://t.cn/zTXhaNe"><i class='icon-share'></i>友情链接：BeJSON</a>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="history">history。。。。</div>
+        </div>
+
+    </div><!--/row-->
+
+    <hr />
+
+    <footer>
+        <p>&copy; Candy Studio 2013</p>
+    </footer>
+
+</div><!--/.fluid-container-->
+
+</body>
+<script>
+    $('#myTab a').click(function (e) {
+        $(this).tab('show');
+    });
+    $('#myTab a[href="#home"]').tab('show'); // Select tab by name
+    $('#myTab a:first').tab('show'); // Select first tab
+    $('#myTab a:last').tab('show'); // Select first tab
+    $('#myTab li:eq(2) a').tab('show'); // Select third tab (0-indexed)
+</script>
+
+<script src="js/lib/ZeroClipboard.min.js"></script>
+</html>
